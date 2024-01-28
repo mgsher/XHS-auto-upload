@@ -8,12 +8,12 @@ import Config
 
 
 def create(create_js):
-    print("Uploading...")
+    print("It will be done soon...")
     time.sleep(10)
     create_js = f'return document.querySelector("{create_js}")'
     Config.Browser.execute_script(create_js).click()
-    print("Published successful")
-    print("Going back to the previous menu...")
+    print("Published successful!")
+    print("Return to the main interface...")
     time.sleep(5)
 
 
@@ -25,7 +25,7 @@ def input_title():
 
 
 def input_content():
-    content_file = input("Enter the path of the content (must be txt):")
+    content_file = input("Enter the path of the content (must be txt file):")
     if content_file.lower() == 'back':
         return None
     try:
@@ -35,7 +35,14 @@ def input_content():
         print("Path doesn't exist, please try again")
         return input_content()
     return content
-    
+
+
+def input_tag():
+    tag_input = input("Enter tags, use ' ' to split multiple (optional):")
+    if tag_input.lower() == 'back':
+        return None
+    return tag_input
+ 
 
 def input_video_path():
     path_mp4 = input("Enter the path of the video:")
@@ -48,7 +55,7 @@ def input_video_path():
 
 
 def input_cover_path():
-    path_cover = input("Enter the path of the cover (use the first frame of video by default):")
+    path_cover = input("Enter the path of the cover (optional):")
     if path_cover.lower() == 'back':
         return None
     if path_cover and not os.path.isfile(path_cover):
@@ -57,6 +64,41 @@ def input_cover_path():
     return path_cover
 
 
+# pass title, content and tags to selectors
+def create_general(title, content, input_tags):
+    title_input = Config.Browser.find_element(By.CSS_SELECTOR, ".c-input_inner")
+    content_input = Config.Browser.find_element(By.CSS_SELECTOR, "#post-textarea")
+
+    title_input.clear()
+    title_input.send_keys(title)
+    content_input.clear()
+    content_input.send_keys(content + '\n')
+    
+    tags = input_tags.split(' ')
+    for tag in tags:
+        if tag.startswith('#'):
+            content_input.send_keys(tag)  
+            
+            # Wait until dropdown menu appears
+            first_tag_selector = "li[data-index='0'] .menu-item-string"
+            try:
+                WebDriverWait(Config.Browser, 10).until(
+                    EC.visibility_of_element_located((By.CSS_SELECTOR, first_tag_selector))
+                )
+                # Select the first matched tag if exists
+                first_topic = Config.Browser.find_element(By.CSS_SELECTOR, first_tag_selector)
+                first_topic.click()
+                
+            except TimeoutException:
+                # Check if there is any matched tags
+                no_match_elements = Config.Browser.find_elements(By.CSS_SELECTOR, ".noMatchTemplate")
+                if no_match_elements:
+                    print("Didn't find matched tag")
+                else:
+                    print("Time out")
+
+
+# Video feature
 def create_video():
     step = "input_video_path"  
     path_mp4 = None
@@ -90,7 +132,14 @@ def create_video():
             if content is None:
                 step = "input_title"  
                 continue
-            break
+            step = "input_tag"
+            
+        elif step == "input_tag":
+            input_tags = input_tag()
+            if input_tags is None:
+                step = "input_content"
+                continue
+            break  
     
     # Find the place to upload video
     try:
@@ -130,23 +179,27 @@ def create_video():
         WebDriverWait(Config.Browser, 10, 0.2).until(
             lambda x: x.find_element(By.CSS_SELECTOR, ".css-8mz9r9 > div:nth-child(1) > button:nth-child(2)")).click()
     
-    title_input = Config.Browser.find_element(By.CSS_SELECTOR, ".c-input_inner")
-    content_input = Config.Browser.find_element(By.CSS_SELECTOR, "#post-textarea")
-
-    title_input.clear()
-    title_input.send_keys(title)
-    content_input.clear()
-    content_input.send_keys(content)
+    # add tags to the post
+    create_general(title, content, input_tags)
     
     create(".publishBtn")
 
 
 def input_image_path():
     while True:
-        user_input = input("Enter the path of images, use ',' to split multiple:")
-        if user_input.lower() == 'back':
+        # user_input = input("Enter the path of images, use ',' to split multiple:")
+        image_file = input("Enter the path of images (must be txt file):")
+        if image_file.lower() == 'back':
             return None
-        path_image = user_input.split(',')
+
+        try:
+            with open(image_file, 'r', encoding='utf-8') as file:
+                path_images = file.read().strip()
+        except FileNotFoundError:
+            print("Path doesn't exist, please try again")
+            return input_image_path()
+        
+        path_image = path_images.split('\n')
         if 0 < len(path_image) <= 9:
             for i in path_image:
                 if not os.path.isfile(i):
@@ -154,14 +207,17 @@ def input_image_path():
                     break
             else:
                 return "\n".join(path_image)
+            
         elif len(path_image) <= 0:
             print("At least 1 image should be uploaded")
             continue
         else:
             print("At most 9 images should be uploaded")
             continue
+        return path_image
+        
 
-
+# Image feature
 def create_image():
     step = "input_image_path"  
     path_image = []
@@ -187,8 +243,16 @@ def create_image():
             if content is None:
                 step = "input_title"  
                 continue
+            step = "input_tag" 
+        
+        elif step == "input_tag":
+            input_tags = input_tag()
+            if input_tags is None:
+                step = "input_content"
+                continue
             break  
     try:
+        # Find the place to upload image
         WebDriverWait(Config.Browser, 10, 0.2).until(
             lambda x: x.find_element(By.CSS_SELECTOR, "div.tab:nth-child(2)")).click()
     except TimeoutException:
@@ -199,12 +263,8 @@ def create_image():
         path_image)
     print("Image(s) uploading...")
     time.sleep(10)
-    title_input = Config.Browser.find_element(By.CSS_SELECTOR, ".c-input_inner")
-    content_input = Config.Browser.find_element(By.CSS_SELECTOR, "#post-textarea")
-
-    title_input.clear()
-    title_input.send_keys(title)
-    content_input.clear()
-    content_input.send_keys(content)
+    
+    # Add tags to the post
+    create_general(title, content, input_tags)
 
     create("button.css-k3hpu2:nth-child(1)")

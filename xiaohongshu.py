@@ -29,7 +29,7 @@ def login_successful():
     # get ID
     name_content = WebDriverWait(Config.Browser, 10, 0.2).until(
         lambda x: x.find_element(By.CSS_SELECTOR, ".name-box")).text
-    print(f"{name_content},log in successful")
+    print(f"{name_content}, log in successful")
     Config.Browser.get("https://creator.xiaohongshu.com/publish/publish")
     Config.CurrentUser = name_content
     
@@ -58,7 +58,7 @@ def login():
         phone = input("phone number (China Mainland):")
         if len(phone) == 11:
             break
-        print("phone number invalid")
+        print("Invalid phone number")
     
     # send verification
     input_phone = Config.Browser.find_element(By.CSS_SELECTOR,"input[placeholder='手机号']")
@@ -68,7 +68,7 @@ def login():
     send_code_button.click()
 
     code = input("Verification code:")
-    # back to upper level
+    # back to previous menu
     if code.lower() == 'back':
         return login() 
     
@@ -94,7 +94,7 @@ def switch_users():
 
 def Quit():
     Cookie.save_cookie()
-    print("Exiting...")
+    print("Script exiting...")
     Config.Browser.quit()
     sys.exit(0)
 
@@ -119,13 +119,13 @@ def select_create():
                 Quit()
                 return
             case default:
-                print("Number invalid")
+                print("Invalid number")
 
 
 def start():
     try:
         # initialize
-        print("Welcome to XHS auto-uploading helper, at any time, \n use 'ctrl+c' to exit this script, \n and enter 'back' to go back to the upper menu")
+        print("Welcome to the XHS auto-uploading helper, at any time, \n use 'ctrl+c' to exit this script, \n and enter 'back' to go back to the previous menu")
         Init.init()
         select_user()
         login()

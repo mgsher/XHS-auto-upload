@@ -14,7 +14,6 @@ def set_cookie():
 def get_new_cookie():
     cookies = json.dumps(Config.Browser.get_cookies())
     Config.CookiesDict[Config.CurrentUser] = cookies
-    set_cookie()
 
 
 def save_cookie():

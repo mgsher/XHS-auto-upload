@@ -1,72 +1,95 @@
-# Xiaohongshu Auto-uploading Helper
+# XHS Auto-Uploading Helper
 
-## Setup
+This tool automates the process of uploading content to Xiaohongshu (Little Red Book). Follow the setup instructions below to get started.
 
-> Prerequisite:  
-> - Python 3.11.1  
-> - Download WebDriver provided by Firefox
->   - [geckodriver](https://github.com/mozilla/geckodriver)
+## Setup Instructions
 
-### Clone project
+### Prerequisites
+
+Ensure you have the following before proceeding:
+- Python 3.11.1  
+- Download WebDriver provided by Firefox
+>  - [geckodriver](https://github.com/mozilla/geckodriver)
+
+
+### Clone the Project
+
+Clone the repository to your local machine using the following command:
 
 ```shell
 git clone https://github.com/LuckyTime1025/xiaohongshu.git
 ```
 
-### Enter folder
+### Navigating to the Project Folder
+
+Change your directory to the cloned project folder:
 
 ```shell
 cd xiaohongshu
 ```
 
-### Create virtual environment
+### Setting Up the Virtual Environment
+
+Create a virtual environment to manage dependencies:
 
 ```shell
 python -m venv venv
 ```
 
-### Activate virtual environment
+### Activate the Virtual Environment
 
 ```shell
 .\venv\Scripts\activate
 ```
 
-### Install Pypi Dependency
+### Installing Dependencies
+
+Install the required Python packages from ```requirements.txt```:
 
 ```shell
-pip install -r requirements.txt 
+pip install -r requirements.txt
 ```
 
-## Instruction
+## Script Instructions
 
-### Run script
+### How to Run the Script
 
+Execute the following command in your shell:
 ```shell
 python main.py
 ```
 
-### Log in
-> Once the script runs, it will first check if ```Cookie``` in ```cookies.json``` is valid. If ```Cookie``` is invalid or the file doesn't exist, user have to use their phone number to receive verification code to log in. Otherwise, the script will log user in through ```Cookie``` by default.
-> ```Cookie``` will be saved in ```cookies.json``` once the account is logged in successfully.
+### Login Process
 
-### General feature
-While using the script, at any time:
-> Use 'ctrl + c' to exit the script. 
-> Enter 'back' to go back to upper menu.
+- Cookie Check: Initially, the script checks if the ```Cookie``` in ```cookies.json``` is valid. If ```Cookie``` is invalid or the file or the file is absent, you will need to log in using your phone number to receive a verification code. By default, the script uses the ```Cookie``` for login when available.
+- Cookie Storage: Upon successful login, ```Cookie``` will be saved in ```cookies.json``` 
 
-### Video upload
+### General Features
 
-It's not necessary to upload cover when uploading video. XHS automatically generates cover by using the first frame of the uploaded video. However, user is encouraged to upload more attractive cover manually.
+- Exiting the Script: Use 'ctrl + c' to exit the script at any time.  
+- Navigation: Enter 'back' to go back to the previous menu.
 
-User is allowed to upload image in ```.mp4```, ```.mov```, ```.flv```, ```.f4v```, ```.mkv```, ```.rm```, ```.rmvb```, ```.m4v```, ```.mpg```, ```.mpeg```, and ```.ts``` format.
 
-### Image upload
+### Uploading Videos
 
-User should upload at least 1 image and at most 9 images. If user wants to upload multiple images, use ',' (without blankspace!) to split different filepaths of images. 
+- Video Path: Provide the full path to the video file you wish to upload.
+- Cover Upload (Optional): Xiaohongshu automatically generates a video cover using its first frame. However, you can upload a custom cover to enhance appeal.
 
-User is allowed to upload image in ```.jpg```, ```.jpeg```, ```.png```, and ```.webp``` format.
+> Supported video formats: ```.mp4```, ```.mov```, ```.flv```, ```.f4v```, ```.mkv```, ```.rm```, ```.rmvb```, ```.m4v```, ```.mpg```, ```.mpeg```, ```.ts```.
 
-### Content upload (for both video and image cases)
 
-User can enter the title directly while publishing.
-As for the content, user should provide a valid filepath of the txt file of the content. User can therefore edit the content in a more flexible way.
+### Uploading Images
+
+- Image Path File: Provide the path to a ```txt``` file containing the paths of the image(s) you wish to upload.
+
+- Quantity: You can upload a minimum of 1 and a maximum of 9 images per post. Use ```Enter```(aka New Line) to separate paths when uploading multiple images.
+
+> Supported image formats: ```.jpg```, ```.jpeg```, ```.png```, ```.webp```.
+
+
+### Uploading Title, Content, and Tags (For Both Video and Images)
+
+- Title: First, you'll be prompted to enter the title of your post.
+- Content: Then, upload the content by providing the path to its ```txt``` file.
+- Tags (Optional): Finally, add tags to your post if desired. Start each tag with ```#``` and separate multiple tags with spaces.
+
