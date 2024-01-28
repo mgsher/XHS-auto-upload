@@ -1,10 +1,8 @@
 import sys
-
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support import expected_conditions as EC
-
 import Config
 import Cookie
 import Init
@@ -15,26 +13,26 @@ def select_user():
     while Config.UserList:
         for i, v in enumerate(Config.UserList):
             print(f"{i + 1}.{v}", end="\t")
-        select = input("\n请选择用户(输入'n'使用手机号登录)：")
+        select = input("\nSelect account (Enter 'n' to log in by phone number)：")
         if select == 'n':
-            # 手机号登录
+            # log in by phone num
             Config.login_status = True
             return
         try:
             Config.CurrentUser = Config.UserList[int(select) - 1]
             return
         except (ValueError, IndexError):
-            print("请输入有效的手机号")
+            print("Invalid number")
 
 
 def login_successful():
-    # 获取昵称
+    # get ID
     name_content = WebDriverWait(Config.Browser, 10, 0.2).until(
         lambda x: x.find_element(By.CSS_SELECTOR, ".name-box")).text
-    print(f"{name_content},登录成功!")
+    print(f"{name_content},log in successful")
     Config.Browser.get("https://creator.xiaohongshu.com/publish/publish")
     Config.CurrentUser = name_content
-    # 获取Cookie
+    
     Cookie.get_new_cookie()
     Cookie.save_cookie()
 
@@ -55,42 +53,40 @@ def login():
     if not Config.login_status:
         cookie_login()
         return
-    # 访问登陆页面
+    
     while True:
-        phone = input("请输入手机号：")
+        phone = input("phone number (China Mainland):")
         if len(phone) == 11:
             break
-        print("手机号码不合法！")
+        print("phone number invalid")
+    
+    # send verification
     input_phone = Config.Browser.find_element(By.CSS_SELECTOR,"input[placeholder='手机号']")
     input_phone.send_keys(phone)
 
-    # 等待验证码链接可点击
     send_code_button = Config.Browser.find_element(By.XPATH, "//*[contains(text(), '发送验证码')]")
     send_code_button.click()
 
-    # 等待用户输入验证码
-    code = input("请输入验证码：")
+    code = input("Verification code:")
+    # back to upper level
+    if code.lower() == 'back':
+        return login() 
+    
     while len(code) != 6:
-        print("验证码长度必须是6位！")
-        code = input("请重新输入验证码：")
+        print("Verification code must be 6 digits, please try again")
+        code = input("Verification code:")
 
-    # 找到验证码输入框并输入验证码
     code_input = Config.Browser.find_element(By.CSS_SELECTOR, "input[placeholder='验证码']")
     code_input.send_keys(code)
 
-    # 找到登录按钮并点击
     login_button = Config.Browser.find_element(By.CSS_SELECTOR, "button.css-1jgt0wa.css-kyhkf6")
     login_button.click()
 
-    # 登录
-    #login_btn = 'return document.querySelector("#page > div > div.content > div.con > div.login-box-container > div > ' \
-    #            'div > div > div > div:nth-child(2) > button")'
-    #Config.Browser.execute_script(login_btn).click()
     login_successful()
 
 
 def switch_users():
-    print("正在清除Cookie")
+    print("Logging out...")
     Config.Browser.delete_all_cookies()
     select_user()
     login()
@@ -98,7 +94,7 @@ def switch_users():
 
 def Quit():
     Cookie.save_cookie()
-    print("正在退出...")
+    print("Exiting...")
     Config.Browser.quit()
     sys.exit(0)
 
@@ -107,8 +103,8 @@ def select_create():
     while True:
         if Config.Browser.current_url != "https://creator.xiaohongshu.com/publish/publish":
             Config.Browser.get("https://creator.xiaohongshu.com/publish/publish")
-        print("1. 视频上传  2.图文上传  3. 切换用户 4.退出")
-        select = input("请选择功能：")
+        print("1.Video Upload 2.Image Upload 3.Switch User 4.Exit")
+        select = input("Select function:")
         match select:
             case '1':
                 Create.create_video()
@@ -123,22 +119,20 @@ def select_create():
                 Quit()
                 return
             case default:
-                print("请输入有效的数字")
+                print("Number invalid")
 
 
 def start():
     try:
-        # 初始化程序
-        print("正在初始化程序...")
+        # initialize
+        print("Welcome to XHS auto-uploading helper, at any time, \n use 'ctrl+c' to exit this script, \n and enter 'back' to go back to the upper menu")
         Init.init()
-        # 选择用户
         select_user()
-        # 登录
         login()
         while True:
-            # 选择功能
+            # select function
             select_create()
     except KeyboardInterrupt:
-        print("\n正在退出...")
+        print("\nExiting...")
     except Exception as e:
-        print(f"发生了一些错误：\n{e}")
+        print(f"Error happened：\n{e}")

@@ -1,54 +1,72 @@
-# 小红书自动化
+# Xiaohongshu Auto-uploading Helper
 
-## 部署
+## Setup
 
-> 先决条件  
+> Prerequisite:  
 > - Python 3.11.1  
-> - 下载 Firefox 提供的 WebDriver
+> - Download WebDriver provided by Firefox
 >   - [geckodriver](https://github.com/mozilla/geckodriver)
 
-### 克隆项目
+### Clone project
 
 ```shell
 git clone https://github.com/LuckyTime1025/xiaohongshu.git
 ```
 
-### 进入项目目录
+### Enter folder
 
 ```shell
 cd xiaohongshu
 ```
 
-### 创建虚拟环境
+### Create virtual environment
 
 ```shell
 python -m venv venv
 ```
 
-### 激活虚拟环境
+### Activate virtual environment
 
 ```shell
 .\venv\Scripts\activate
 ```
 
-### 安装 Pypi 依赖
+### Install Pypi Dependency
 
 ```shell
 pip install -r requirements.txt 
 ```
 
-## 使用
+## Instruction
 
-### 运行项目
+### Run script
 
 ```shell
 python main.py
 ```
 
-> 项目启动后会先检测 ```cookies.json``` 中的 ```Cookie``` 是否有效，如果没有该文件或 ```Cookie``` 失效，则使用手机号接收验证码登陆，否则使用 ```Cookie``` 自动登陆
+### Log in
+> Once the script runs, it will first check if ```Cookie``` in ```cookies.json``` is valid. If ```Cookie``` is invalid or the file doesn't exist, user have to use their phone number to receive verification code to log in. Otherwise, the script will log user in through ```Cookie``` by default.
+> ```Cookie``` will be saved in ```cookies.json``` once the account is logged in successfully.
 
-## 注意事项
+### General feature
+While using the script, at any time:
+>Use 'ctrl + c' to exit the script.
+>Enter 'back' to go back to upper menu.
 
-### 使用图文上传时
+### Video upload
 
-当需要上传多个图片时，每个图片路径使用英文逗号 ',' 分隔！
+It's not necessary to upload cover when uploading video. XHS automatically generates cover by using the first frame of the uploaded video. However, user is encouraged to upload more attractive cover manually.
+
+User is allowed to upload image in ```.mp4```, ```.mov```, ```.flv```, ```.f4v```, ```.mkv```, ```.rm```, ```.rmvb```, ```.m4v```, ```.mpg```, ```.mpeg```, and ```.ts``` format.
+
+### Image upload
+
+User should upload at least 1 image and at most 9 images. If user wants to upload multiple images, use ',' (without blankspace!) to split different filepaths of images. 
+
+User is allowed to upload image in ```.jpg```, ```.jpeg```, ```.png```, and ```.webp``` format.
+
+### Content upload (for both video and image cases)
+
+User can enter the title directly while publishing.
+As for the content, user should provide a valid filepath of the txt file of the content. User can therefore edit the content in a more flexible way.
