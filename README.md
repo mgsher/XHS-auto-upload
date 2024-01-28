@@ -51,8 +51,8 @@ python main.py
 
 ### General feature
 While using the script, at any time:
->Use 'ctrl + c' to exit the script.
->Enter 'back' to go back to upper menu.
+> Use 'ctrl + c' to exit the script. 
+> Enter 'back' to go back to upper menu.
 
 ### Video upload
 
