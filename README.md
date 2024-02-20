@@ -1,4 +1,4 @@
-# XHS Auto-Uploading Helper
+# XHS Posting Automation Tool
 
 This tool automates the process of uploading content to Xiaohongshu (Little Red Book). Follow the setup instructions below to get started.
 
