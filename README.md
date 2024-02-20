@@ -9,7 +9,7 @@ This tool automates the process of uploading content to Xiaohongshu (Little Red 
 Ensure you have the following before proceeding:
 - Python 3.11.1  
 - Download WebDriver provided by Firefox
->  - [geckodriver](https://github.com/mozilla/geckodriver)
+>  [geckodriver](https://github.com/mozilla/geckodriver)
 
 
 ### Clone the Project
