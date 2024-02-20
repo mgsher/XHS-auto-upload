@@ -61,13 +61,13 @@ python main.py
 
 ### Login Process
 
-- Cookie Check: Initially, the script checks if the ```Cookie``` in ```cookies.json``` is valid. If ```Cookie``` is invalid or the file or the file is absent, you will need to log in using your phone number to receive a verification code. By default, the script uses the ```Cookie``` for login when available.
+- Cookie Check: Initially, the script checks if the ```Cookie``` in ```cookies.json``` is valid. If ```Cookie``` is invalid or the file or the file is absent, you will need to log in by using your phone number to receive a verification code. By default, the script uses the ```Cookie``` for login when available.
 - Cookie Storage: Upon successful login, ```Cookie``` will be saved in ```cookies.json``` 
 
 ### General Features
 
-- Exiting the Script: Use 'ctrl + c' to exit the script at any time.  
-- Navigation: Enter 'back' to go back to the previous menu.
+- Exiting the Script: Use ```ctrl + c``` to exit the script at any time.  
+- Navigation: Enter ```back``` to go back to the previous menu.
 
 
 ### Uploading Videos

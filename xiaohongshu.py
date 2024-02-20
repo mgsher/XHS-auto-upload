@@ -1,3 +1,20 @@
+"""
+Copyright (C) 2023 musicnbrain.org
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+"""
+
 import sys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
@@ -29,7 +46,7 @@ def login_successful():
     # get ID
     name_content = WebDriverWait(Config.Browser, 10, 0.2).until(
         lambda x: x.find_element(By.CSS_SELECTOR, ".name-box")).text
-    print(f"{name_content}, log in successful")
+    print(f"Hello {name_content}, log in successful")
     Config.Browser.get("https://creator.xiaohongshu.com/publish/publish")
     Config.CurrentUser = name_content
     
@@ -51,11 +68,14 @@ def cookie_login():
 def login():
     Config.Browser.get("https://creator.xiaohongshu.com/login")
     if not Config.login_status:
-        cookie_login()
-        return
+        if Cookie.check_cookie_expiry():
+            cookie_login()
+            return
+        else:
+            Config.login_status = True
     
     while True:
-        phone = input("phone number (China Mainland):")
+        phone = input("Enter your phone number (China Mainland):")
         if len(phone) == 11:
             break
         print("Invalid phone number")
