@@ -61,7 +61,7 @@ python main.py
 
 ### Login Process
 
-- Cookie Check: Initially, the script checks if the ```Cookie``` in ```cookies.json``` is valid. If ```Cookie``` is invalid or the file or the file is absent, you will need to log in by using your phone number to receive a verification code. By default, the script uses the ```Cookie``` for login when available.
+- Cookie Check: Initially, the script checks if the ```Cookie``` in ```cookies.json``` is valid. If ```Cookie``` is invalid or the file is absent, you will need to log in by using your phone number to receive a verification code. By default, the script uses the ```Cookie``` for login when available.
 - Cookie Storage: Upon successful login, ```Cookie``` will be saved in ```cookies.json``` 
 
 ### General Features
@@ -80,7 +80,7 @@ python main.py
 
 ### Uploading Images
 
-- Image Path File: Provide the path to a ```txt``` file containing the paths of the image(s) you wish to upload.
+- Image Path File: Provide the path to a ```txt``` file containing the path of the image(s) you wish to upload.
 
 - Quantity: You can upload a minimum of 1 and a maximum of 9 images per post. Use ```Enter```(aka New Line) to separate paths when uploading multiple images.
 
