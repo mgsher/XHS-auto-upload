@@ -1,4 +1,4 @@
-# XHS Auto-Uploading Helper
+# XHS Posting Automation Tool
 
 This tool automates the process of uploading content to Xiaohongshu (Little Red Book). Follow the setup instructions below to get started.
 
@@ -9,7 +9,7 @@ This tool automates the process of uploading content to Xiaohongshu (Little Red 
 Ensure you have the following before proceeding:
 - Python 3.11.1  
 - Download WebDriver provided by Firefox
->  - [geckodriver](https://github.com/mozilla/geckodriver)
+>  [geckodriver](https://github.com/mozilla/geckodriver)
 
 
 ### Clone the Project
@@ -61,13 +61,13 @@ python main.py
 
 ### Login Process
 
-- Cookie Check: Initially, the script checks if the ```Cookie``` in ```cookies.json``` is valid. If ```Cookie``` is invalid or the file or the file is absent, you will need to log in using your phone number to receive a verification code. By default, the script uses the ```Cookie``` for login when available.
+- Cookie Check: Initially, the script checks if the ```Cookie``` in ```cookies.json``` is valid. If ```Cookie``` is invalid or the file is absent, you will need to log in by using your phone number to receive a verification code. By default, the script uses the ```Cookie``` for login when available.
 - Cookie Storage: Upon successful login, ```Cookie``` will be saved in ```cookies.json``` 
 
 ### General Features
 
-- Exiting the Script: Use 'ctrl + c' to exit the script at any time.  
-- Navigation: Enter 'back' to go back to the previous menu.
+- Exiting the Script: Use ```ctrl + c``` to exit the script at any time.  
+- Navigation: Enter ```back``` to go back to the previous menu.
 
 
 ### Uploading Videos
@@ -80,7 +80,7 @@ python main.py
 
 ### Uploading Images
 
-- Image Path File: Provide the path to a ```txt``` file containing the paths of the image(s) you wish to upload.
+- Image Path File: Provide the path to a ```txt``` file containing the path of the image(s) you wish to upload.
 
 - Quantity: You can upload a minimum of 1 and a maximum of 9 images per post. Use ```Enter```(aka New Line) to separate paths when uploading multiple images.
 
