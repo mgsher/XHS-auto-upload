@@ -25,12 +25,17 @@ def select_user():
             print("Invalid number")
 
 
-def login_successful():
+def login_successful(name_content = None):
     # get ID
-    name_content = WebDriverWait(Config.Browser, 10, 0.2).until(
-        lambda x: x.find_element(By.CSS_SELECTOR, ".name-box")).text
+    # name_content = WebDriverWait(Config.Browser, 10, 0.2).until(
+    #         lambda x: x.find_element(By.XPATH, "//span[@class='channel' and contains(text(), '我')]")).text 
+
+    if name_content is None:
+        name_content = WebDriverWait(Config.Browser, 10, 0.2).until(
+            lambda x: x.find_element(By.CSS_SELECTOR, ".name-box")).text
     print(f"{name_content}, log in successful")
-    Config.Browser.get("https://creator.xiaohongshu.com/publish/publish")
+    #Config.Browser.get("https://creator.xiaohongshu.com/publish/publish")
+    Config.Browser.get("https://www.xiaohongshu.com")
     Config.CurrentUser = name_content
     
     Cookie.get_new_cookie()
@@ -40,27 +45,42 @@ def login_successful():
 def cookie_login():
     Cookie.set_cookie()
     try:
-        WebDriverWait(Config.Browser, 10, 0.2).until(
-            lambda x: x.find_element(By.CSS_SELECTOR, ".name-box")).text
+        # WebDriverWait(Config.Browser, 10, 0.2).until(
+        #     lambda x: x.find_element(By.CSS_SELECTOR, ".name-box")).text
+        
+        print(WebDriverWait(Config.Browser, 20, 3).until(
+            lambda x: x.find_element(By.XPATH, "//span[@class='channel' and contains(text(), '我')]")).text)
     except TimeoutException:
         Config.login_status = True
+        print(TimeoutException)
         return
-    login_successful()
+    login_successful('testing user')
 
 
 def login():
+    #Config.Browser.get("https://www.xiaohongshu.com/")
     Config.Browser.get("https://creator.xiaohongshu.com/login")
     if not Config.login_status:
         cookie_login()
         return
     
+    region_selector = Config.Browser.find_element(By.XPATH, "//div[@class='slot-right']")
+    region_selector.click()
+
+    # TODO: modify XPATH to more robust, relative path, right now I can only get this to work
+    us_selector = WebDriverWait(Config.Browser, 10, 0.2).until(
+            lambda x: x.find_element(By.XPATH, "/html/body/div[4]/div/div/div/div[7]/div")
+            ) 
+    us_selector.click()
+    
     while True:
         phone = input("phone number (China Mainland):")
-        if len(phone) == 11:
+        if len(phone) == 11 or len(phone) == 10:
             break
         print("Invalid phone number")
     
     # send verification
+
     input_phone = Config.Browser.find_element(By.CSS_SELECTOR,"input[placeholder='手机号']")
     input_phone.send_keys(phone)
 
@@ -80,6 +100,61 @@ def login():
     code_input.send_keys(code)
 
     login_button = Config.Browser.find_element(By.CSS_SELECTOR, "button.css-1jgt0wa.css-kyhkf6")
+    login_button.click()
+
+    login_successful()
+
+
+def login_explore():
+    print("get initial browser info")
+    Config.Browser.get("https://www.xiaohongshu.com")
+    print("clicking initial login button")
+    if not Config.login_status:
+        cookie_login()
+        return
+    
+    login_button = WebDriverWait(Config.Browser, 10, 0.2).until(
+            lambda x: x.find_element(By.ID, "login-btn"))
+    print(login_button.get_attribute('class'))
+    Config.Browser.execute_script("arguments[0].click();", login_button)
+    #login_button.click()
+    print("clicked")
+
+    while True:
+        phone = input("phone number (China Mainland):")
+        if len(phone) == 11:
+            break
+        print("Invalid phone number")
+    
+    # send verification
+    input_phone = Config.Browser.find_element(By.CSS_SELECTOR,"input[placeholder='输入手机号']")
+    input_phone.send_keys(phone)
+    print("phone num inputted!")
+    send_code_button = WebDriverWait(Config.Browser, 20, 0.2).until(
+        EC.element_to_be_clickable((By.XPATH, "//span[@class='code-button active' and contains(text(), '获取验证码')]"))
+    )
+    #send_code_button = Config.Browser.find_element(By.XPATH, "//span[@class='code-button active' and contains(text(), '获取验证码')]")
+    print('veri code')
+    print(send_code_button.get_attribute('class'))
+    send_code_button.click()
+
+    print("veri code sent!")
+    code = input("Verification code:")
+    # back to previous menu
+    if code.lower() == 'back':
+        return login() 
+    
+    while len(code) != 6:
+        print("Verification code must be 6 digits, please try again")
+        code = input("Verification code:")
+
+    code_input = Config.Browser.find_element(By.CSS_SELECTOR, "input[placeholder='输入验证码']")
+    code_input.send_keys(code)
+    print("searching for radio button")
+    agreement_radio = Config.Browser.find_element(By.XPATH, "//svg[@class='reds-icon radio']")
+    agreement_radio.click()
+    print("searching for final login button button")
+    login_button = Config.Browser.find_element(By.XPATH, "//button[@class='submit' and contains(text(), '登录')]")
     login_button.click()
 
     login_successful()
@@ -115,7 +190,7 @@ def select_create():
             case '3':
                 switch_users()
                 return
-            case '4':
+            case '6':
                 Quit()
                 return
             case default:
@@ -128,11 +203,13 @@ def start():
         print("Welcome to the XHS auto-uploading helper, at any time, \n use 'ctrl+c' to exit this script, \n and enter 'back' to go back to the previous menu")
         Init.init()
         select_user()
-        login()
+        
+        #login()
+        login_explore()
         while True:
             # select function
             select_create()
     except KeyboardInterrupt:
         print("\nExiting...")
-    except Exception as e:
-        print(f"Error happened：\n{e}")
+    # except Exception as e:
+    #     print(f"Error happened：\n{e}")
